@@ -14,7 +14,7 @@ app.use(express.json());
 // OpenAI setup
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// API route
+// POST route for AI chat
 app.post('/api/ask', async (req, res) => {
   const { message } = req.body;
 
@@ -41,8 +41,12 @@ app.post('/api/ask', async (req, res) => {
   }
 });
 
-// ✅ Removed frontend static file serving
+// ✅ Simple root route for testing
+app.get('/', (req, res) => {
+  res.send('✅ Flōra backend is working');
+});
 
+// Start server
 app.listen(port, () => {
   console.log(`✅ Flōra server running on port ${port}`);
 });
