@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
   res.send('✅ Flōra backend is working');
 });
 
-// Start server
 app.listen(port, () => {
   console.log(`✅ Flōra server running on port ${port}`);
 });
+
