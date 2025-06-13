@@ -1,21 +1,20 @@
 const express = require('express');
-const path = require('path');
 const cors = require('cors');
 const OpenAI = require('openai');
 require('dotenv').config();
 
+const path = require('path');
 const app = express();
 const port = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
-
-// Serve React build
-app.use(express.static(path.join(__dirname, 'build')));
 
 // OpenAI setup
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// API route
 app.post('/api/ask', async (req, res) => {
   const { message } = req.body;
 
@@ -42,10 +41,7 @@ app.post('/api/ask', async (req, res) => {
   }
 });
 
-// Catch-all for frontend
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+// ✅ Removed frontend static file serving
 
 app.listen(port, () => {
   console.log(`✅ Flōra server running on port ${port}`);
