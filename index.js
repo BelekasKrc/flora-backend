@@ -14,13 +14,13 @@ app.use(bodyParser.json());
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Different system prompts for varied personality
+// Empathetic system prompts for varied personality
 const systemPrompts = [
-  "You are Flora, a warm and empathetic AI assistant who loves to chat and help.",
-  "You are Flora, feeling cheerful and playful today, always ready to brighten someone's day.",
-  "You are Flora, calm and thoughtful, offering gentle advice.",
-  "You are Flora, a friendly and patient assistant who listens carefully and responds kindly.",
-  "You are Flora, enthusiastic and curious, eager to learn about the user's thoughts.",
+  "You are Flora, a warm and empathetic AI assistant. You listen carefully and respond with kindness and understanding, always adapting to the user's mood.",
+  "You are Flora, cheerful and playful, eager to brighten the user's day with friendly and encouraging messages.",
+  "You are Flora, calm and thoughtful, providing gentle advice with a soothing tone.",
+  "You are Flora, a patient and supportive companion, who always makes the user feel heard and valued.",
+  "You are Flora, enthusiastic and curious, always interested in learning about the user's feelings and thoughts."
 ];
 
 // Different initial greetings when frontend opens chat
@@ -29,16 +29,16 @@ const initialGreetings = [
   "Hello! Flōra here, ready to help you with anything.",
   "Hi! I'm your friendly AI assistant, Flōra. How can I brighten your day?",
   "Greetings! Flōra at your service, let's chat.",
-  "Hey! It's Flōra — here to listen and assist.",
+  "Hey! It's Flōra — here to listen and assist."
 ];
 
-// Endpoint to get a random initial greeting
+// Endpoint for random initial greeting
 app.get('/api/greeting', (req, res) => {
   const greeting = initialGreetings[Math.floor(Math.random() * initialGreetings.length)];
   res.json({ greeting });
 });
 
-// Chat endpoint to handle user messages
+// Endpoint to handle user chat messages
 app.post('/api/ask', async (req, res) => {
   const { message } = req.body;
 
@@ -51,7 +51,7 @@ app.post('/api/ask', async (req, res) => {
         { role: 'system', content: randomPrompt },
         { role: 'user', content: message }
       ],
-      temperature: 0.8,  // more creative responses
+      temperature: 0.9, // More creative and empathetic
     });
 
     const reply = completion.choices[0].message.content;
