@@ -1,4 +1,3 @@
-// --- index.js (BACKEND) ---
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -15,26 +14,44 @@ app.use(bodyParser.json());
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// Different system prompts for varied personality
+const systemPrompts = [
+  "You are Flora, a warm and empathetic AI assistant who loves to chat and help.",
+  "You are Flora, feeling cheerful and playful today, always ready to brighten someone's day.",
+  "You are Flora, calm and thoughtful, offering gentle advice.",
+  "You are Flora, a friendly and patient assistant who listens carefully and responds kindly.",
+  "You are Flora, enthusiastic and curious, eager to learn about the user's thoughts.",
+];
+
+// Different initial greetings when frontend opens chat
+const initialGreetings = [
+  "Hey there 🌼 I'm Flōra. What's on your mind today?",
+  "Hello! Flōra here, ready to help you with anything.",
+  "Hi! I'm your friendly AI assistant, Flōra. How can I brighten your day?",
+  "Greetings! Flōra at your service, let's chat.",
+  "Hey! It's Flōra — here to listen and assist.",
+];
+
+// Endpoint to get a random initial greeting
+app.get('/api/greeting', (req, res) => {
+  const greeting = initialGreetings[Math.floor(Math.random() * initialGreetings.length)];
+  res.json({ greeting });
+});
+
+// Chat endpoint to handle user messages
 app.post('/api/ask', async (req, res) => {
   const { message } = req.body;
 
   try {
+    const randomPrompt = systemPrompts[Math.floor(Math.random() * systemPrompts.length)];
+
     const completion = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
-        {
-          role: 'system',
-          content: `
-            You are Flōra, a calm, kind, and empathetic life assistant who cares deeply about the user's feelings.
-            Respond with warmth, encouragement, and sensitivity.
-            Use gentle language and, when appropriate, add comforting phrases.
-          `,
-        },
-        {
-          role: 'user',
-          content: message,
-        },
+        { role: 'system', content: randomPrompt },
+        { role: 'user', content: message }
       ],
+      temperature: 0.8,  // more creative responses
     });
 
     const reply = completion.choices[0].message.content;
